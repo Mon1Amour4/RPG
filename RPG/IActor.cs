@@ -5,10 +5,10 @@ namespace RPG
     internal interface IActor
     {
         string Name { get; }
-        int Health { get; }
+        float Health { get; } // Changed to float from uint
         bool IsAlive { get; }
-        uint AttackPower { get; }
+        float AttackPower { get; } // Changed to float from uint
 
-        void ReceiveDamage(IActor actor, uint Damage);
+        void ReceiveDamage(IActor actor, float Damage); // Changed to float from uint
     }
 }

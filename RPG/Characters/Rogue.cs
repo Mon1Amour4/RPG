@@ -9,99 +9,28 @@ namespace RPG.Characters
 {
     internal class Rogue : AbstractCharacter
     {
-        //IActor
-        public string Name { get; private set; }
-        public override uint Health
+        readonly static Dictionary<uint, float> rogueAttackPowerList = new Dictionary<uint, float>()
         {
-            get { return this.Health; }
-            set
-            {
-
-                if (IsAlive)
-                {
-                    this.Health = value;
-
-                }
-                else
-                {
-                    Console.WriteLine("IsAlive = false");
-
-                }
-            }
-        }
-
-
-        private bool IsAlive
-        {
-            get
-            {
-                return Health > 0;
-            }
-
-        }
-        public override uint AttackPower
-        {
-            get { return AttackPower; }
-        }
-        public override void ReceiveDamage(IActor actor, uint Damage)
-        {
-            if (IsAlive)
-            {
-                actor.Health -= Damage;
-            }
-            else
-            {
-                Console.WriteLine("Char is dead, he doesn't receive any damage");
-            }
-        }
-
-        //ICharacter
-        public override uint Experience
-        {
-            get
-            {
-                return this.Experience;
-            }
-        }
-
-        public override uint Level
-        {
-            get
-            {
-                return this.Level;
-            }
-        }
-
-        public override void ReceiveExperience(uint Experience)
-        {
-            Rogue.Experience += Experience;
-        }
-
-        readonly static Dictionary<uint, uint> rogueAttackPower = new Dictionary<uint, uint>()
-        {
-            {1,25},
-            {2,35 },
-            {3,54 },
-            {4,65 },
-            {5,88 }
+            {1, 32.5f},
+            {2, 40.0f },
+            {3, 47.5f },
+            {4, 55.0f },
+            {5, 62.5f }
 
     };
-        readonly static Dictionary<uint, uint> rogueHealth = new Dictionary<uint, uint>()
+        readonly static Dictionary<uint, float> rogueHealthList = new Dictionary<uint, float>()
         {
-            {1,100},
-            {2,125 },
-            {3,150 },
-            {4,175 },
-            {5,200 }
+            {1,87.0f},
+            {2,99.0f },
+            {3,111.0f },
+            {4,123.0f },
+            {5,135.0f }
 
     };
 
-        public Rogue(string name, Dictionary<uint, uint> rogAttList, Dictionary<uint, uint> rogHelthList)
-            : base(name, rogAttList, rogHelthList)
-        {
+        public Rogue(string name, float baseHealth, float baseAttackPower)
+            : base(name, baseHealth, baseAttackPower) { }
 
 
-
-        }
     }
 }

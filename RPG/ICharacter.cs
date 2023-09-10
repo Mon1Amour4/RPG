@@ -10,7 +10,7 @@ namespace RPG
 
         void ReceiveExperience(uint Experience);
 
-        //IActor
+
 
 
     }

@@ -6,7 +6,14 @@ using System.Threading.Tasks;
 
 namespace RPG.Monsters
 {
-    internal class Dragon : IMonster
+    internal class Dragon : AbstractMonster
     {
+
+        public Dragon(string name, float health, float attackPower, uint xpReward) : base(name, health, attackPower, xpReward)
+        {
+
+        }
+
+
     }
 }

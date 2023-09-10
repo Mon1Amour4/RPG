@@ -5,19 +5,41 @@ namespace RPG
     internal abstract class AbstractCharacter : ICharacter
     {
         //IActor
-        virtual public string Name { get; private set; }
+        public string Name { get; }
 
-        public int Health { get; }
+        public float Health { get; private set; }
 
-        public bool IsAlive { get; }
-        public uint AttackPower { get; }
-        abstract public void ReceiveDamage(IActor actor, uint Damage);
+        public bool IsAlive { get; private set; }
+        public float AttackPower { get; private set; }
+        public void ReceiveDamage(IActor actor, float Damage)
+        {
+            if (IsAlive && this.Health <= Damage)
+            {
+                this.Health -= Damage;
+                this.IsAlive = false;
+                ;
+                Console.WriteLine($"Character {this.GetType()} receives damage: {Damage} from {actor.GetType()} and he dies");
+            }
+            else if (IsAlive && this.Health > Damage)
+            {
+                this.Health -= Damage;
+                Console.WriteLine($"Character {this.GetType()} receives damage: {Damage}");
+            }
+            else
+            {
+                Console.WriteLine("The Character cannot receive any damage, cause he's dead");
+            }
+        }
 
 
         //ICharacter
-        public uint Experience { get; }
+        public uint Experience { get; set; }
         public uint Level { get; }
-        abstract public void ReceiveExperience(uint Experience);
+        public void ReceiveExperience(uint Experience)
+        {
+            this.Experience += Experience;
+            Console.WriteLine($"Character {this.GetType()} receives {Experience} XP ");
+        }
 
 
 
@@ -30,16 +52,17 @@ namespace RPG
             {5,140 }
         };
 
-        public AbstractCharacter(string Name, Dictionary<uint, uint> attackPowerList, Dictionary<uint, int> healthList)
+        public AbstractCharacter(string Name, float baseAttackPower, float baseHealth)
         {
             this.Name = Name;
-            this.Health = healthList[0];
+            this.Health = baseHealth;
             this.IsAlive = true;
-            this.AttackPower = attackPowerList[0];
+            this.AttackPower = baseAttackPower;
             this.Experience = 0;
             this.Level = 0;
 
         }
+
 
     }
 }
