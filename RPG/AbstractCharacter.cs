@@ -20,12 +20,12 @@ namespace RPG
                 this.Health -= Damage;
                 this.IsAlive = false;
                 ;
-                Console.WriteLine($"Character {this.GetType()} receives damage: {Damage} from {actor.GetType()} and he dies");
+                Console.WriteLine($"Character {this.GetType().Name} receives damage: {Damage} from {actor.GetType().Name} and he dies");
             }
             else if (IsAlive && this.Health > Damage)
             {
                 this.Health -= Damage;
-                Console.WriteLine($"Character {this.GetType()} receives damage: {Damage}");
+                Console.WriteLine($"Character {this.GetType().Name} receives damage: {Damage}");
             }
             else
             {
@@ -40,7 +40,7 @@ namespace RPG
         public void ReceiveExperience(uint Experience)
         {
             this.Experience += Experience;
-            Console.WriteLine($"Character {this.GetType()} receives {Experience} XP ");
+            Console.WriteLine($"Character {this.GetType().Name} receives {Experience} XP ");
             this.levelUp();
         }
         abstract public void increaseStats();
@@ -57,7 +57,7 @@ namespace RPG
                     {
                         this.Level += 1;
                         this.Experience -= tempExp;
-                        Console.WriteLine($"Character {this.GetType()} Had leveled up and now he has {this.Level} Level");
+                        Console.WriteLine($"Character {this.GetType().Name} Had leveled up and now he has {this.Level} Level");
                         this.increaseStats();
                     }
                 }

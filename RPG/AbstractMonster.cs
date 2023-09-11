@@ -19,7 +19,7 @@ namespace RPG
                 this.Health -= Damage;
                 this.IsAlive = false;
 
-                Console.WriteLine($"Monster {this.GetType()} receives damage from {actor.GetType()} and it dies");
+                Console.WriteLine($"Monster {this.GetType().Name} receives damage from {actor.GetType().Name} and it dies");
 
                 if (actor is ICharacter) //Вопрос, вместо typecasting, я ведь мог просто передать аргумент (AbstractCharacter character) в функцию и получил бы все тот же функционал ? 
                 {
@@ -36,11 +36,11 @@ namespace RPG
             else if (this.IsAlive && this.Health > Damage)
             {
                 this.Health -= Damage;
-                Console.WriteLine($"Monster {this.GetType()} receives {Damage} damage from {actor.GetType()} and has {this.Health} HP");
+                Console.WriteLine($"Monster {this.GetType().Name} receives {Damage} damage from {actor.GetType().Name} and has {this.Health} HP");
             }
             else
             {
-                Console.WriteLine($"Character {this.GetType()} cannot receive any damage cause he's dead");
+                Console.WriteLine($"Character {this.GetType().Name} cannot receive any damage cause he's dead");
             }
 
 
