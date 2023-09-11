@@ -9,8 +9,8 @@ namespace RPG
         uint Level { get; }
 
         void ReceiveExperience(uint Experience);
-
-
+        void levelUp(); // Added 
+        void increaseStats();
 
 
     }

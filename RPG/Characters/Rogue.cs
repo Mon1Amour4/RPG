@@ -31,6 +31,15 @@ namespace RPG.Characters
         public Rogue(string name, float baseHealth, float baseAttackPower)
             : base(name, baseHealth, baseAttackPower) { }
 
+        public override void increaseStats()
+        {
+            Console.WriteLine($"Character had {this.AttackPower} attack power and {this.Health} Health");
+            rogueAttackPowerList.TryGetValue(this.Level, out float tempAttackPower);
+            rogueHealthList.TryGetValue(this.Level, out float tempHealth);
+            this.AttackPower = tempAttackPower;
+            this.Health = tempHealth;
+            Console.WriteLine($"Now he has {this.AttackPower} Attack Power and {this.Health} health");
 
+        }
     }
 }

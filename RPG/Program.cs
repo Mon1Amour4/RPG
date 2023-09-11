@@ -16,7 +16,9 @@ namespace RPG
             rogue.ReceiveDamage(warrior, (uint)warrior.AttackPower);
             Console.WriteLine($"Rogue's Health: {rogue.Health}");
             Console.WriteLine($"Is Rogue Alive?: {rogue.IsAlive}");
-            Dragon dragon = new Dragon("Blood Dragon", 250f, 14f, 15);
+            Dragon dragon = new Dragon("Blood Dragon", 15f, 14f, 150);
+            dragon.ReceiveDamage(warrior, warrior.AttackPower);
+            Console.WriteLine($"Character {warrior.GetType()} has {warrior.Experience} XP");
             dragon.ReceiveDamage(warrior, warrior.AttackPower);
 
         }
