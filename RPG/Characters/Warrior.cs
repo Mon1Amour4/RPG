@@ -31,7 +31,7 @@ namespace RPG.Characters
         }
         public override void increaseStats()
         {
-            Console.WriteLine($"Character {this.GetType} had {this.AttackPower} attack power and {this.Health} Health");
+            Console.WriteLine($"Character {this.GetType()} had {this.AttackPower} attack power and {this.Health} Health");
             float tempAttackPower = 0f;
             float tempHealth = 0f;
             warriorAttackPowerList.TryGetValue(this.Level, out tempAttackPower);
