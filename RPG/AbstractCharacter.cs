@@ -18,14 +18,14 @@ namespace RPG
         protected abstract Dictionary<uint, float> HealthTable { get; }
         protected abstract Dictionary<uint, float> PowerTable { get; }
 
-        public void ReceiveDamage(IActor actor, float Damage)
+        public void ReceiveDamage(ICharacter character, float Damage)
         {
             if (IsAlive && this.Health <= Damage)
             {
                 this.Health -= Damage;
                 this.IsAlive = false;
                 ;
-                Console.WriteLine($"Character {this.GetType().Name} receives damage: {Damage} from {actor.GetType().Name} and he dies");
+                Console.WriteLine($"Character {this.GetType().Name} receives damage: {Damage} from {character.GetType().Name} and he dies");
             }
             else if (IsAlive && this.Health > Damage)
             {
@@ -51,14 +51,19 @@ namespace RPG
 
         protected float increaseStat(Dictionary<uint, float> statList)
         {
-            if (statList.TryGetValue(this.Level, out float tempStatIncrease))
+#warning тут подумать 
+            try
             {
+                statList.TryGetValue(this.Level, out float tempStatIncrease);
                 return tempStatIncrease;
+
             }
-            else
+            catch (KeyNotFoundException ex)
             {
-                throw new Exception("Все плохо"); // нормально сделать
+
+                throw new Exception(ex.Message);
             }
+
         }
 
         public void increaseStats()

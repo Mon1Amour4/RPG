@@ -12,39 +12,25 @@ namespace RPG
         public float Health { get; private set; }
         public bool IsAlive { get; private set; }
         public float AttackPower { get; }
-        public void ReceiveDamage(IActor actor, float Damage)
+        public void ReceiveDamage(ICharacter character, float Damage)
         {
             if (this.IsAlive && this.Health <= Damage)
             {
                 this.Health -= Damage;
                 this.IsAlive = false;
 
-                Console.WriteLine($"Monster {this.GetType().Name} receives damage from {actor.GetType().Name} and it dies");
-
-                if (actor is ICharacter) //Вопрос, вместо typecasting, я ведь мог просто передать аргумент (AbstractCharacter character) в функцию и получил бы все тот же функционал ? 
-                {
-                    ICharacter character = actor as ICharacter;
-
-                    if (character != null)
-                    {
-                        character.ReceiveExperience(this.XpReward);
-                    }
-
-                }
-
+                Console.WriteLine($"Monster {this.GetType().Name} receives damage from {character.GetType().Name} and it dies");
+                character.ReceiveExperience(this.XpReward);
             }
             else if (this.IsAlive && this.Health > Damage)
             {
                 this.Health -= Damage;
-                Console.WriteLine($"Monster {this.GetType().Name} receives {Damage} damage from {actor.GetType().Name} and has {this.Health} HP");
+                Console.WriteLine($"Monster {this.GetType().Name} receives {Damage} damage from {character.GetType().Name} and has {this.Health} HP");
             }
             else
             {
                 Console.WriteLine($"Character {this.GetType().Name} cannot receive any damage cause he's dead");
             }
-
-
-
         }
         public uint XpReward { get; }
         public AbstractMonster(string name, float health, float attackPower, uint expReward)
