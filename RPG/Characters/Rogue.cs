@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace RPG.Characters
 {
     internal class Rogue : AbstractCharacter
     {
-        readonly static Dictionary<uint, float> rogueAttackPowerList = new Dictionary<uint, float>()
+        // Вынести данные в JSON файлы конфигурации
+        // Использовать статический конструктор типа для инициализации таблиц
+        // Использовать System.Text.Json для десериализации
+        // [JsonPropertyName("foo")]
+        readonly static Dictionary<uint, float> rogueAttackPowerTable = new Dictionary<uint, float>()
         {
             {1, 32.5f},
             {2, 40.0f },
@@ -17,29 +22,24 @@ namespace RPG.Characters
             {4, 55.0f },
             {5, 62.5f }
 
-    };
-        readonly static Dictionary<uint, float> rogueHealthList = new Dictionary<uint, float>()
+        };
+        readonly static Dictionary<uint, float> rogueHealthTable = new Dictionary<uint, float>()
         {
             {1,87.0f},
             {2,99.0f },
             {3,111.0f },
             {4,123.0f },
             {5,135.0f }
+        };
 
-    };
+        protected override Dictionary<uint, float> HealthTable => rogueHealthTable;
+        protected override Dictionary<uint, float> PowerTable => rogueAttackPowerTable;
 
         public Rogue(string name, float baseHealth, float baseAttackPower)
-            : base(name, baseHealth, baseAttackPower) { }
-
-        public override void increaseStats()
-        {
-            Console.WriteLine($"Character had {this.AttackPower} attack power and {this.Health} Health");
-            rogueAttackPowerList.TryGetValue(this.Level, out float tempAttackPower);
-            rogueHealthList.TryGetValue(this.Level, out float tempHealth);
-            this.AttackPower = tempAttackPower;
-            this.Health = tempHealth;
-            Console.WriteLine($"Now he has {this.AttackPower} Attack Power and {this.Health} health");
-
+            : base(name, baseHealth, baseAttackPower) 
+        { 
+            // IMPLEMENACION
         }
+
     }
 }

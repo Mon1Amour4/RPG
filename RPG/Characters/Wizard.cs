@@ -4,7 +4,7 @@ namespace RPG.Characters
 {
     internal class Wizard : AbstractCharacter
     {
-        readonly static Dictionary<uint, float> wizardAttackPowerList = new Dictionary<uint, float>()
+        readonly static Dictionary<uint, float> wizardAttackPowerTable = new Dictionary<uint, float>()
         {
             {1, 69.0f},
             {2, 78.0f },
@@ -13,7 +13,7 @@ namespace RPG.Characters
             {5, 105.0f }
 
     };
-        readonly static Dictionary<uint, float> wizardHealthList = new Dictionary<uint, float>()
+        readonly static Dictionary<uint, float> wizardHealthTable = new Dictionary<uint, float>()
         {
             {1,45.5f},
             {2,54.0f },
@@ -22,20 +22,12 @@ namespace RPG.Characters
             {5,79.5f }
 
     };
+
+        protected override Dictionary<uint, float> HealthTable => wizardHealthTable;
+        protected override Dictionary<uint, float> PowerTable => wizardAttackPowerTable;
+
         public Wizard(string Name, float baseAttackPower, float baseHealth) : base(Name, baseAttackPower, baseHealth)
         {
-        }
-        public override void increaseStats()
-        {
-            Console.WriteLine($"Character {this.GetType} had {this.AttackPower} attack power and {this.Health} Health");
-            float tempAttackPower = 0f;
-            float tempHealth = 0f;
-            wizardAttackPowerList.TryGetValue(this.Level, out tempAttackPower);
-            wizardHealthList.TryGetValue(this.Level, out tempHealth);
-            this.AttackPower = tempAttackPower;
-            this.Health = tempHealth;
-            Console.WriteLine($"Now he has {this.AttackPower} Attack Power and {this.Health} health");
-
         }
     }
 }

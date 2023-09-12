@@ -9,8 +9,10 @@ namespace RPG
         uint Level { get; }
 
         void ReceiveExperience(uint Experience);
-        void levelUp(); // Added 
-        void increaseStats();
+
+#warning Eto nado ubrat'
+        void levelUp(); // УБРАЦ 
+        void increaseStats(); // УБРАЦ 
 
 
     }
