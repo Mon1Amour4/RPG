@@ -24,8 +24,7 @@ namespace RPG
             {
                 this.Health -= Damage;
                 this.IsAlive = false;
-                ;
-                Console.WriteLine($"Character {this.GetType().Name} receives damage: {Damage} from {character.GetType().Name} and he dies");
+                Console.WriteLine($"\n --DEATH-- Character {this.GetType().Name} receives damage: {Damage} from {character.GetType().Name} and he dies");
             }
             else if (IsAlive && this.Health > Damage)
             {
@@ -49,7 +48,7 @@ namespace RPG
             this.levelUp();
         }
 
-        protected float increaseStat(Dictionary<uint, float> statList)
+        protected float IncreaseStat(Dictionary<uint, float> statList)
         {
 #warning тут подумать 
             try
@@ -68,38 +67,56 @@ namespace RPG
 
         public void increaseStats()
         {
-            Console.WriteLine($"Character had {this.AttackPower} attack power and {this.Health} Health");
+            float tempAttckPWR = this.AttackPower;
+            float tempHEalth = this.Health;
+
             try
             {
-                this.AttackPower = increaseStat(PowerTable);
-                this.Health = increaseStat(HealthTable);
+                this.AttackPower = IncreaseStat(PowerTable);
+                this.Health = IncreaseStat(HealthTable);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
 
-            Console.WriteLine($"Now he has {this.AttackPower} Attack Power and {this.Health} health");
+            Console.WriteLine($"Character had increased he's stats:\nAttack Power: {tempAttckPWR} (+{this.AttackPower - tempAttckPWR}) --> {this.AttackPower}\nHealth: {tempHEalth} (+{this.Health - tempHEalth}) --> {this.Health}");
         }
 
         virtual public void levelUp()
         {
             uint tempExp = 0;
-            for (int i = 0; i < levelUpDictionary.Count; i++) // переписать на while
+            uint maxLvl = (uint)levelUpDictionary.Count;
+            try
             {
                 levelUpDictionary.TryGetValue(this.Level, out tempExp);
+                while (this.Experience >= tempExp && this.Level <= levelUpDictionary.Count - 1)
                 {
-                    if (this.Experience >= tempExp)
                     {
-                        this.Level++;
-                        this.Experience -= tempExp;
-                        Console.WriteLine($"Character {this.GetType().Name} Had leveled up and now he has {this.Level} Level");
-                        this.increaseStats();
+                        if (this.Experience >= tempExp)
+                        {
+                            this.Level++;
+                            this.Experience -= tempExp;
+                            Console.WriteLine($"\n --LVLUP-- Character {this.GetType().Name} Had leveled up and now he has {this.Level} Level");
+                            this.increaseStats();
+                        }
                     }
                 }
             }
+            catch (KeyNotFoundException ex)
+            {
 
-            Console.WriteLine($"He need {tempExp - this.Experience} more for Level upping");
+                throw new Exception(ex.Message);
+            }
+            if (this.Level >= maxLvl)
+            {
+                Console.WriteLine($"\nCharacter {this.GetType().Name} has Max Lvl ");
+            }
+            else
+            {
+                Console.WriteLine($"He need {tempExp - this.Experience} more for Level upping");
+            }
+
         }
 
         readonly static Dictionary<uint, uint> levelUpDictionary = new Dictionary<uint, uint>()

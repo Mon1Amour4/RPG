@@ -14,16 +14,18 @@ namespace RPG.Characters
             {2, 100.0f },
             {3, 112.5f },
             {4, 125.0f },
-            {5, 137.5f }
+            {5, 137.5f },
+            {6, 150.0f }
 
     };
         readonly static Dictionary<uint, float> warriorHealthTable = new Dictionary<uint, float>()
         {
-            {1,108.0f},
-            {2,126.0f },
-            {3,144.0f },
-            {4,162.0f },
-            {5,180.0f }
+            {1, 108.0f},
+            {2, 126.0f },
+            {3, 144.0f },
+            {4, 162.0f },
+            {5, 180.0f },
+            {6, 188.0f }
 
     };
 

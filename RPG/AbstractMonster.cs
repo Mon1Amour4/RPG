@@ -19,7 +19,7 @@ namespace RPG
                 this.Health -= Damage;
                 this.IsAlive = false;
 
-                Console.WriteLine($"Monster {this.GetType().Name} receives damage from {character.GetType().Name} and it dies");
+                Console.WriteLine($"\n --DEATH -- Monster {this.GetType().Name} receives damage from {character.GetType().Name} and it dies");
                 character.ReceiveExperience(this.XpReward);
             }
             else if (this.IsAlive && this.Health > Damage)

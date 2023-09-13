@@ -10,16 +10,18 @@ namespace RPG.Characters
             {2, 78.0f },
             {3, 87.0f },
             {4, 96.0f },
-            {5, 105.0f }
+            {5, 105.0f },
+            {6, 114.0f }
 
     };
         readonly static Dictionary<uint, float> wizardHealthTable = new Dictionary<uint, float>()
         {
-            {1,45.5f},
-            {2,54.0f },
-            {3,62.5f },
-            {4,71.0f },
-            {5,79.5f }
+            {1, 45.5f},
+            {2, 54.0f },
+            {3, 62.5f },
+            {4, 71.0f },
+            {5, 79.5f },
+            {6, 88.0f }
 
     };
 
