@@ -1,5 +1,6 @@
 ﻿using RPG.Characters;
 using RPG.Monsters;
+using System.Text.Json;
 
 namespace RPG
 {
@@ -17,11 +18,16 @@ namespace RPG
             rogue.ReceiveDamage(warrior, (uint)warrior.AttackPower);
             Console.WriteLine($"Rogue's Health: {rogue.Health}");
             Console.WriteLine($"Is Rogue Alive?: {rogue.IsAlive}");
-            Dragon dragon = new Dragon("Blood Dragon", 15f, 14f, 9000);
+            Dragon dragon = new Dragon("Blood Dragon", 15f, 14f, 30);
             dragon.ReceiveDamage(warrior, warrior.AttackPower);
             Console.WriteLine($"Character {warrior.GetType().Name} has {warrior.Experience} XP");
             dragon.ReceiveDamage(warrior, warrior.AttackPower);
+            Wizard wizard = new Wizard("Allarion", 45.5f, 61.2f);
 
+            //Serialization 
+            rogue.Serialization();
+            warrior.Serialization();
+            wizard.Serialization();
         }
     }
 }

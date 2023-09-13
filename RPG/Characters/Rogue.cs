@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace RPG.Characters
 {
+
     internal class Rogue : AbstractCharacter
     {
         // Вынести данные в JSON файлы конфигурации
         // Использовать статический конструктор типа для инициализации таблиц
         // Использовать System.Text.Json для десериализации
         // [JsonPropertyName("foo")]
-        readonly static Dictionary<uint, float> rogueAttackPowerTable = new Dictionary<uint, float>()
+        [JsonInclude]
+        public readonly static Dictionary<uint, float> rogueAttackPowerTable = new Dictionary<uint, float>()
         {
             {1, 32.5f},
             {2, 40.0f },
@@ -24,6 +26,7 @@ namespace RPG.Characters
             {6, 73.0f }
 
         };
+        [JsonInclude]
         readonly static Dictionary<uint, float> rogueHealthTable = new Dictionary<uint, float>()
         {
             {1, 87.0f},
@@ -34,8 +37,14 @@ namespace RPG.Characters
             {6, 142.0f }
         };
 
+        protected override string typeName => rogueTypeName;
+        protected readonly string rogueTypeName = typeof(Rogue).Name;
+
+
+
         protected override Dictionary<uint, float> HealthTable => rogueHealthTable;
         protected override Dictionary<uint, float> PowerTable => rogueAttackPowerTable;
+
 
         public Rogue(string name, float baseHealth, float baseAttackPower)
             : base(name, baseHealth, baseAttackPower)

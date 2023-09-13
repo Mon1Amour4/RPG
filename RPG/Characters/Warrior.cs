@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace RPG.Characters
 {
+    //[Serializable]
     internal class Warrior : AbstractCharacter
     {
         readonly static Dictionary<uint, float> warriorAttackPowerTable = new Dictionary<uint, float>()
@@ -28,7 +30,8 @@ namespace RPG.Characters
             {6, 188.0f }
 
     };
-
+        protected override string typeName => warriorTypeName;
+        protected readonly string warriorTypeName = typeof(Warrior).Name;
         protected override Dictionary<uint, float> HealthTable => warriorHealthTable;
         protected override Dictionary<uint, float> PowerTable => warriorAttackPowerTable;
 

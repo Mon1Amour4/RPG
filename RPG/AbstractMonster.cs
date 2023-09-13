@@ -6,30 +6,32 @@ using System.Threading.Tasks;
 
 namespace RPG
 {
+    [Serializable]
     internal abstract class AbstractMonster : IMonster
     {
         public string Name { get; }
         public float Health { get; private set; }
         public bool IsAlive { get; private set; }
         public float AttackPower { get; }
+        protected abstract string typeName { get; }//Чоби не юзать рефлексию по 100 раз
         public void ReceiveDamage(ICharacter character, float Damage)
         {
             if (this.IsAlive && this.Health <= Damage)
             {
-                this.Health -= Damage;
+                this.Health = 0;
                 this.IsAlive = false;
 
-                Console.WriteLine($"\n --DEATH -- Monster {this.GetType().Name} receives damage from {character.GetType().Name} and it dies");
+                Console.WriteLine($"\n --DEATH -- Monster {typeName} receives damage from {character.GetType().Name} and it dies");
                 character.ReceiveExperience(this.XpReward);
             }
             else if (this.IsAlive && this.Health > Damage)
             {
                 this.Health -= Damage;
-                Console.WriteLine($"Monster {this.GetType().Name} receives {Damage} damage from {character.GetType().Name} and has {this.Health} HP");
+                Console.WriteLine($"Monster {typeName} receives {Damage} damage from {character.GetType().Name} and has {this.Health} HP");
             }
             else
             {
-                Console.WriteLine($"Character {this.GetType().Name} cannot receive any damage cause he's dead");
+                Console.WriteLine($"Character {typeName} cannot receive any damage cause he's dead");
             }
         }
         public uint XpReward { get; }

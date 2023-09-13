@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json;
 
 namespace RPG.Characters
 {
@@ -27,7 +28,8 @@ namespace RPG.Characters
 
         protected override Dictionary<uint, float> HealthTable => wizardHealthTable;
         protected override Dictionary<uint, float> PowerTable => wizardAttackPowerTable;
-
+        protected override string typeName => wizardTypeName;
+        protected readonly string wizardTypeName = typeof(Wizard).Name;
         public Wizard(string Name, float baseAttackPower, float baseHealth) : base(Name, baseAttackPower, baseHealth)
         {
         }
