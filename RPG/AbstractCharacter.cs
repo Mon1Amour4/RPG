@@ -1,8 +1,12 @@
 ﻿
 
+//using Newtonsoft.Json;
+
 using RPG.Characters;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -56,10 +60,15 @@ namespace RPG
 
         protected float IncreaseStat(Dictionary<uint, float> statList)
         {
-            if (statList.TryGetValue(this.Level, out float tempStatIncrease))
+            if (statList != null)
             {
-                return tempStatIncrease;
+                if (statList.TryGetValue(this.Level, out float tempStatIncrease))
+                {
+                    return tempStatIncrease;
+                }
+                return 0;
             }
+            Console.WriteLine(" --ERROR-- Dictionary = null");
             return 0;
         }
 
@@ -76,11 +85,8 @@ namespace RPG
             {
                 this.Health = IncreaseStat(HealthTable);
             }
-
             Console.WriteLine($"Character had increased he's stats:\nAttack Power: {tempAttckPWR} (+{this.AttackPower - tempAttckPWR}) --> {this.AttackPower}\nHealth: {tempHEalth} (+{this.Health - tempHEalth}) --> {this.Health}");
         }
-
-
 
         virtual public void levelUp()
         {
@@ -100,7 +106,6 @@ namespace RPG
                 {
                     break;
                 }
-
             }
 
             if (this.Level >= maxLvl)
@@ -111,30 +116,59 @@ namespace RPG
             {
                 Console.WriteLine($"He need {tempExp - this.Experience} more for Level upping");
             }
-
         }
 
         //Serialization
-        public virtual void Serialization()
+        public void Serialization()
         {
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonAttackPower = JsonSerializer.Serialize(this.PowerTable, options);
-            string jsonHealth = JsonSerializer.Serialize(this.HealthTable, options);
-            File.WriteAllText($"C:\\Users\\Dev\\source\\repos\\Mon1Amour4\\RPG\\RPG\\Characters\\Tables\\{typeName}AttackPowerTable.json", jsonAttackPower);
-            File.WriteAllText($"C:\\Users\\Dev\\source\\repos\\Mon1Amour4\\RPG\\RPG\\Characters\\Tables\\{typeName}HealthTable.json", jsonHealth);
+            string jsonAttackPower = JsonSerializer.Serialize(this.PowerTable);
+            File.WriteAllText($"C:\\Users\\Dev\\Source\\Repos\\Mon1Amour4\\RPG\\RPG\\Characters\\Tables\\{typeName}AttackPowerTable.json", jsonAttackPower);
+            string jsonAttackHealth = JsonSerializer.Serialize(this.HealthTable);
+            File.WriteAllText($"C:\\Users\\Dev\\Source\\Repos\\Mon1Amour4\\RPG\\RPG\\Characters\\Tables\\{typeName}HealthTable.json", jsonAttackHealth);
         }
 
-        //Deserialization
-        public virtual void Deserialization()
+        public static void Deserialization(ref Dictionary<uint, float> powerAttackDictionary, ref Dictionary<uint, float> healthDictionary, string type)
         {
-            string jsonAttackPowerTablePath = File.ReadAllText($"C:\\Users\\Dev\\source\\repos\\Mon1Amour4\\RPG\\RPG\\Characters\\Tables\\{typeName}AttackPowerTable.json");
-            protected static readonly Dictionary<uint, float>  = new Dictionary<uint, float>;
+            string powerTablePath = $"C:\\Users\\Dev\\Source\\Repos\\Mon1Amour4\\RPG\\RPG\\Characters\\Tables\\{type}AttackPowerTable.json";
 
-        string jsonHealthTablePath = File.ReadAllText($"C:\\Users\\Dev\\source\\repos\\Mon1Amour4\\RPG\\RPG\\Characters\\Tables\\{typeName}HealthTable.json");
-    }
+            if (File.Exists(powerTablePath))
+            {
+                string AttackPowerTableReadFromJson = File.ReadAllText(powerTablePath);
+                try
+                {
+                    powerAttackDictionary = JsonSerializer.Deserialize<Dictionary<uint, float>>(AttackPowerTableReadFromJson);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Can't find file AttackPowerTable");
+            }
+            string healthPath = $"C:\\Users\\Dev\\Source\\Repos\\Mon1Amour4\\RPG\\RPG\\Characters\\Tables\\{type}HealthTable.json";
 
+            if (File.Exists(healthPath))
+            {
+                string HealthTableReadFromJson = File.ReadAllText(healthPath);
+                try
+                {
+                    healthDictionary = JsonSerializer.Deserialize<Dictionary<uint, float>>(HealthTableReadFromJson);
+                }
+                catch (Exception ex)
+                {
 
-    readonly static Dictionary<uint, uint> levelUpDictionary = new Dictionary<uint, uint>()
+                    throw new Exception(ex.Message);
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Can't find file HealthTable");
+            }
+        }
+
+        readonly static Dictionary<uint, uint> levelUpDictionary = new Dictionary<uint, uint>()
         {
             { 0, 10 },
             { 1, 20 },
@@ -143,17 +177,17 @@ namespace RPG
             { 4, 90 },
             { 5, 140 }
         };
-    public AbstractCharacter(string Name, float baseAttackPower, float baseHealth)
-    {
-        this.Name = Name;
-        this.Health = baseHealth;
-        this.IsAlive = true;
-        this.AttackPower = baseAttackPower;
-        this.Experience = 0;
-        this.Level = 0;
+        public AbstractCharacter(string Name, float baseAttackPower, float baseHealth)
+        {
+            this.Name = Name;
+            this.Health = baseHealth;
+            this.IsAlive = true;
+            this.AttackPower = baseAttackPower;
+            this.Experience = 0;
+            this.Level = 0;
+
+        }
+
 
     }
-
-
-}
 }

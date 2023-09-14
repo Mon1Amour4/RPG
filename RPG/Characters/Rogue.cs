@@ -15,41 +15,23 @@ namespace RPG.Characters
         // Использовать статический конструктор типа для инициализации таблиц
         // Использовать System.Text.Json для десериализации
         // [JsonPropertyName("foo")]
-        [JsonInclude]
-        public readonly static Dictionary<uint, float> rogueAttackPowerTable = new Dictionary<uint, float>()
-        {
-            {1, 32.5f},
-            {2, 40.0f },
-            {3, 47.5f },
-            {4, 55.0f },
-            {5, 62.5f },
-            {6, 73.0f }
-
-        };
-        [JsonInclude]
-        readonly static Dictionary<uint, float> rogueHealthTable = new Dictionary<uint, float>()
-        {
-            {1, 87.0f},
-            {2, 99.0f },
-            {3, 111.0f },
-            {4, 123.0f },
-            {5, 135.0f },
-            {6, 142.0f }
-        };
-
+        private readonly static Dictionary<uint, float> rogueAttackPowerTable = new Dictionary<uint, float>(); //changed to private
+        private readonly static Dictionary<uint, float> rogueHealthTable = new Dictionary<uint, float>();//changed to private
         protected override string typeName => rogueTypeName;
-        protected readonly string rogueTypeName = typeof(Rogue).Name;
+        protected readonly static string rogueTypeName = typeof(Rogue).Name;
 
-
-
-        protected override Dictionary<uint, float> HealthTable => rogueHealthTable;
         protected override Dictionary<uint, float> PowerTable => rogueAttackPowerTable;
+        protected override Dictionary<uint, float> HealthTable => rogueHealthTable;
 
-
+        static Rogue()
+        {
+            Deserialization(ref rogueAttackPowerTable, ref rogueHealthTable, rogueTypeName);
+        }
         public Rogue(string name, float baseHealth, float baseAttackPower)
-            : base(name, baseHealth, baseAttackPower)
+                : base(name, baseHealth, baseAttackPower)
         {
             // IMPLEMENACION
+
         }
 
     }
