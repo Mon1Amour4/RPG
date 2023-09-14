@@ -22,7 +22,7 @@ namespace RPG
 
         public bool IsAlive { get; private set; }
         public float AttackPower { get; protected set; }
-
+        public static string basePath = @"C:\Projects\MyApp";
         protected abstract Dictionary<uint, float> HealthTable { get; }
         protected abstract Dictionary<uint, float> PowerTable { get; }
 
@@ -129,7 +129,8 @@ namespace RPG
 
         public static void Deserialization(ref Dictionary<uint, float> powerAttackDictionary, ref Dictionary<uint, float> healthDictionary, string type)
         {
-            string powerTablePath = $"C:\\Users\\Dev\\Source\\Repos\\Mon1Amour4\\RPG\\RPG\\Characters\\Tables\\{type}AttackPowerTable.json";
+            string powerTablePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "Characters", "Tables", $"{type}AttackPowerTable.json");
+
 
             if (File.Exists(powerTablePath))
             {
@@ -147,7 +148,7 @@ namespace RPG
             {
                 Console.WriteLine($"Can't find file AttackPowerTable");
             }
-            string healthPath = $"C:\\Users\\Dev\\Source\\Repos\\Mon1Amour4\\RPG\\RPG\\Characters\\Tables\\{type}HealthTable.json";
+            string healthPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "Characters", "Tables", $"{type}HealthTable.json");
 
             if (File.Exists(healthPath))
             {
