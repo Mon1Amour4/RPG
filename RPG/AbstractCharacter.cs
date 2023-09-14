@@ -131,7 +131,7 @@ namespace RPG
         {
             string powerTablePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "Characters", "Tables", $"{type}AttackPowerTable.json");
 
-
+#warning тут можно получить null, try catch в этом не помогает, подумой!
             if (File.Exists(powerTablePath))
             {
                 string AttackPowerTableReadFromJson = File.ReadAllText(powerTablePath);
@@ -150,6 +150,7 @@ namespace RPG
             }
             string healthPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "Characters", "Tables", $"{type}HealthTable.json");
 
+#warning тут можно получить null, try catch в этом не помогает, подумой!
             if (File.Exists(healthPath))
             {
                 string HealthTableReadFromJson = File.ReadAllText(healthPath);
