@@ -11,10 +11,6 @@ namespace RPG.Characters
 
     internal class Rogue : AbstractCharacter
     {
-        // Вынести данные в JSON файлы конфигурации
-        // Использовать статический конструктор типа для инициализации таблиц
-        // Использовать System.Text.Json для десериализации
-        // [JsonPropertyName("foo")]
         private readonly static Dictionary<uint, float> rogueAttackPowerTable = new Dictionary<uint, float>(); //changed to private
         private readonly static Dictionary<uint, float> rogueHealthTable = new Dictionary<uint, float>();//changed to private
         protected override string typeName => rogueTypeName;

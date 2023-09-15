@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace RPG.Characters
 {
-    //[Serializable]
     internal class Warrior : AbstractCharacter
     {
         readonly static Dictionary<uint, float> warriorAttackPowerTable = new Dictionary<uint, float>();

@@ -13,16 +13,12 @@ namespace RPG
     {
         //IActor
         public string Name { get; }
-
         public float Health { get; protected set; }
-
         public bool IsAlive { get; private set; }
         public float AttackPower { get; protected set; }
         protected abstract Dictionary<uint, float> HealthTable { get; }
         protected abstract Dictionary<uint, float> PowerTable { get; }
-
-        protected abstract string typeName { get; } //Чоби не юзать рефлексию по 100 раз
-
+        protected abstract string typeName { get; }
         public void ReceiveDamage(ICharacter character, float Damage)
         {
             if (IsAlive && this.Health <= Damage)
@@ -41,7 +37,6 @@ namespace RPG
                 Console.WriteLine("The Character cannot receive any damage, cause he's dead");
             }
         }
-
 
         //ICharacter
         public uint Experience { get; private set; }
@@ -69,7 +64,6 @@ namespace RPG
             tempStatIncrease = 0;
             return false;
         }
-
         public void increaseStats()
         {
             float tempAttckPWR = this.AttackPower;
@@ -87,7 +81,6 @@ namespace RPG
             }
             Console.WriteLine($"Character had increased he's stats:\nAttack Power: {tempAttckPWR} (+{this.AttackPower - tempAttckPWR}) --> {this.AttackPower}\nHealth: {tempHEalth} (+{this.Health - tempHEalth}) --> {this.Health}");
         }
-
         virtual public void levelUp()
         {
             uint tempExp = 0;
@@ -117,7 +110,6 @@ namespace RPG
                 Console.WriteLine($"He need {tempExp - this.Experience} more for Level upping");
             }
         }
-
         //Serialization
         public void Serialization()
         {
@@ -126,7 +118,6 @@ namespace RPG
             string jsonAttackHealth = JsonSerializer.Serialize(this.HealthTable);
             File.WriteAllText($"C:\\Users\\Dev\\Source\\Repos\\Mon1Amour4\\RPG\\RPG\\Characters\\Tables\\{typeName}HealthTable.json", jsonAttackHealth);
         }
-
         public static void Deserialization(ref Dictionary<uint, float> powerAttackDictionary, ref Dictionary<uint, float> healthDictionary, string type)
         {
             string basePath = Directory.GetCurrentDirectory();
@@ -169,7 +160,6 @@ namespace RPG
                 Console.WriteLine(ex.Message);
             }
         }
-
         readonly static Dictionary<uint, uint> levelUpDictionary = new Dictionary<uint, uint>()
         {
             { 0, 10 },
@@ -189,7 +179,6 @@ namespace RPG
             this.Level = 0;
 
         }
-
 
     }
 }
