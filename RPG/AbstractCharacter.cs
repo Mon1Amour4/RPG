@@ -22,7 +22,6 @@ namespace RPG
 
         public bool IsAlive { get; private set; }
         public float AttackPower { get; protected set; }
-        public static string basePath = @"C:\Projects\MyApp";
         protected abstract Dictionary<uint, float> HealthTable { get; }
         protected abstract Dictionary<uint, float> PowerTable { get; }
 
@@ -57,33 +56,38 @@ namespace RPG
             Console.WriteLine($"Character {typeName} receives {Experience} XP ");
             this.levelUp();
         }
-
-        protected float IncreaseStat(Dictionary<uint, float> statList)
+        protected bool IncreaseStat(Dictionary<uint, float> statList, out float tempStatIncrease)
         {
+
             if (statList != null)
             {
-                if (statList.TryGetValue(this.Level, out float tempStatIncrease))
+                if (statList.TryGetValue(this.Level, out float value))
                 {
-                    return tempStatIncrease;
+                    tempStatIncrease = value;
+                    return true;
                 }
-                return 0;
+                tempStatIncrease = 0;
+                return false;
             }
             Console.WriteLine(" --ERROR-- Dictionary = null");
-            return 0;
+            tempStatIncrease = 0;
+            return false;
         }
 
         public void increaseStats()
         {
             float tempAttckPWR = this.AttackPower;
             float tempHEalth = this.Health;
+            float temp;
 
-            if (IncreaseStat(PowerTable) != 0)
+            if (IncreaseStat(PowerTable, out temp))
             {
-                this.AttackPower = IncreaseStat(PowerTable);
+                this.AttackPower = temp;
             }
-            if (IncreaseStat(HealthTable) != 0)
+
+            if (IncreaseStat(HealthTable, out temp))
             {
-                this.Health = IncreaseStat(HealthTable);
+                this.Health = temp;
             }
             Console.WriteLine($"Character had increased he's stats:\nAttack Power: {tempAttckPWR} (+{this.AttackPower - tempAttckPWR}) --> {this.AttackPower}\nHealth: {tempHEalth} (+{this.Health - tempHEalth}) --> {this.Health}");
         }
@@ -129,26 +133,38 @@ namespace RPG
 
         public static void Deserialization(ref Dictionary<uint, float> powerAttackDictionary, ref Dictionary<uint, float> healthDictionary, string type)
         {
-            string powerTablePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "Characters", "Tables", $"{type}AttackPowerTable.json");
+            string powerTablePath = Directory.GetCurrentDirectory() + $"\\..\\..\\..\\Characters\\Tables\\{type}AttackPowerTable.json";
 
 #warning тут можно получить null, try catch в этом не помогает, подумой!
+
             if (File.Exists(powerTablePath))
             {
                 string AttackPowerTableReadFromJson = File.ReadAllText(powerTablePath);
-                try
+
+                if (powerAttackDictionary != null)
                 {
-                    powerAttackDictionary = JsonSerializer.Deserialize<Dictionary<uint, float>>(AttackPowerTableReadFromJson);
+                    try
+                    {
+                        powerAttackDictionary = JsonSerializer.Deserialize<Dictionary<uint, float>>(AttackPowerTableReadFromJson);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    throw new Exception(ex.Message);
+                    Console.WriteLine("--ERROR-- powerAttackDictionary is null!!");
                 }
             }
             else
             {
                 Console.WriteLine($"Can't find file AttackPowerTable");
             }
-            string healthPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "Characters", "Tables", $"{type}HealthTable.json");
+
+
+            string healthPath = Directory.GetCurrentDirectory() + $"\\..\\..\\..\\Characters\\Tables\\{type}HealthTable.json";
 
 #warning тут можно получить null, try catch в этом не помогает, подумой!
             if (File.Exists(healthPath))
@@ -157,11 +173,15 @@ namespace RPG
                 try
                 {
                     healthDictionary = JsonSerializer.Deserialize<Dictionary<uint, float>>(HealthTableReadFromJson);
+                    if (healthDictionary == null)
+                    {
+                        throw new NullReferenceException("--ERROR-- healthDictionary is null!!");
+                    }
                 }
                 catch (Exception ex)
                 {
 
-                    throw new Exception(ex.Message);
+                    throw new NullReferenceException(ex.Message);
                 }
             }
             else
