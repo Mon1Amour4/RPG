@@ -1,8 +1,4 @@
-﻿
-
-//using Newtonsoft.Json;
-
-using RPG.Characters;
+﻿using RPG.Characters;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -133,60 +129,44 @@ namespace RPG
 
         public static void Deserialization(ref Dictionary<uint, float> powerAttackDictionary, ref Dictionary<uint, float> healthDictionary, string type)
         {
-            string powerTablePath = Directory.GetCurrentDirectory() + $"\\..\\..\\..\\Characters\\Tables\\{type}AttackPowerTable.json";
-
-#warning тут можно получить null, try catch в этом не помогает, подумой!
-
-            if (File.Exists(powerTablePath))
+            string basePath = Directory.GetCurrentDirectory();
+            string powerTablePath = Path.Combine(basePath, "..", "..", "..", "Characters", "Tables", $"{type}AttackPowerTable.json");
+            try
             {
+                if (!File.Exists(powerTablePath))
+                {
+                    throw new FileNotFoundException($"--ERROR-- Couldn't found powerTable file at {powerTablePath}");
+                }
+                if (powerAttackDictionary == null)
+                {
+                    throw new Exception("--ERROR-- powerAttackDictionary is Null");
+                }
+
                 string AttackPowerTableReadFromJson = File.ReadAllText(powerTablePath);
+                powerAttackDictionary = JsonSerializer.Deserialize<Dictionary<uint, float>>(AttackPowerTableReadFromJson) ?? throw new Exception("--ERROR-- Can't deserialize powerTable");
 
-                if (powerAttackDictionary != null)
+                string healthTablePath = Path.Combine(basePath, "..", "..", "..", "Characters", "Tables", $"{type}HealthTable.json");
+                string HealthTableReadFromJson = File.ReadAllText(healthTablePath);
+
+                healthDictionary = JsonSerializer.Deserialize<Dictionary<uint, float>>(HealthTableReadFromJson) ?? throw new Exception("\"--ERROR-- Cant deserialize healthTable");
+
+                if (!File.Exists(healthTablePath))
                 {
-                    try
-                    {
-                        powerAttackDictionary = JsonSerializer.Deserialize<Dictionary<uint, float>>(AttackPowerTableReadFromJson);
-
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
+                    throw new FileNotFoundException($"--ERROR-- Couldn't found healthTable file at {healthTablePath}");
                 }
-                else
+                if (healthDictionary == null)
                 {
-                    Console.WriteLine("--ERROR-- powerAttackDictionary is null!!");
+                    throw new Exception("--ERROR-- healthDictionary is Null");
                 }
             }
-            else
+
+            catch (FileNotFoundException ex)
             {
-                Console.WriteLine($"Can't find file AttackPowerTable");
+                Console.WriteLine(ex.Message);
             }
-
-
-            string healthPath = Directory.GetCurrentDirectory() + $"\\..\\..\\..\\Characters\\Tables\\{type}HealthTable.json";
-
-#warning тут можно получить null, try catch в этом не помогает, подумой!
-            if (File.Exists(healthPath))
+            catch (Exception ex)
             {
-                string HealthTableReadFromJson = File.ReadAllText(healthPath);
-                try
-                {
-                    healthDictionary = JsonSerializer.Deserialize<Dictionary<uint, float>>(HealthTableReadFromJson);
-                    if (healthDictionary == null)
-                    {
-                        throw new NullReferenceException("--ERROR-- healthDictionary is null!!");
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                    throw new NullReferenceException(ex.Message);
-                }
-            }
-            else
-            {
-                Console.WriteLine($"Can't find file HealthTable");
+                Console.WriteLine(ex.Message);
             }
         }
 
