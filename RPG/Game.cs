@@ -11,13 +11,15 @@ namespace RPG
     {
         public const uint NumRounds = 10;
         private static Game instance;
-
-        enum FightResult
+       public enum FightResult
         {
             Won,
             Lost,
             Draw
         }
+       
+        
+       
 
         public void Fight(ICharacter charecter, IMonster monster, out Enum result)
         {
@@ -80,9 +82,16 @@ namespace RPG
 
             if (attackApplyDamageProbability >= koef)
             {
-                Console.WriteLine($"{attackingSide.GetType().Name} hits {defensiveSide.GetType().Name}!");
-                defensiveSide.ReceiveDamage(attackingSide, attackingSide.AttackPower);
-
+                if (attackingSide is ICharacter)
+                {
+                    Console.WriteLine($"{attackingSide.GetType().Name} hits {defensiveSide.GetType().Name}!");
+                    defensiveSide.ReceiveDamage((ICharacter)attackingSide, attackingSide.AttackPower);
+                }
+                else
+                {
+                    Console.WriteLine($"{attackingSide.GetType().Name} hits {defensiveSide.GetType().Name}!");
+                    defensiveSide.ReceiveDamage((IMonster)attackingSide, attackingSide.AttackPower);
+                }
             }
             else
             {
@@ -90,6 +99,15 @@ namespace RPG
             }
 
 
+        }
+        private delegate Enum DeathAnnounce(IActor actor, FightResult result);
+        private FightResult PerformDeathAnnounce(IActor attackingSide, IActor defensiveSide, FightResult result, DeathAnnounce announce)
+        {
+            if (attackingSide.IsAlive == false)
+            {
+                return result.;
+            }
+           
         }
         public static Game getInstance()
         {
