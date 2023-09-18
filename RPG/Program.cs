@@ -14,6 +14,7 @@ namespace RPG
             Wizard wizard = new Wizard("Wizardiy", 44, 34);
             Dragon dragon = new Dragon("Blood Dragon", 15f, 14f, 900);
             dragon.ReceiveDamage(rogue, rogue.AttackPower);
+            wizard.ReceiveDamage(dragon, dragon.AttackPower);
 
         }
     }

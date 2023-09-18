@@ -9,7 +9,7 @@ namespace RPG
         bool IsAlive { get; }
         float AttackPower { get; } // Changed to float from uint
 
-        void ReceiveDamage(ICharacter character, float Damage); // Changed to float from uint
+        void ReceiveDamage(IActor actor, float Damage); // Changed to float from uint
     }
 }
  

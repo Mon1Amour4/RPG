@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 
 namespace RPG
 {
@@ -19,23 +20,37 @@ namespace RPG
         protected abstract Dictionary<uint, float> HealthTable { get; }
         protected abstract Dictionary<uint, float> PowerTable { get; }
         protected abstract string typeName { get; }
-        public void ReceiveDamage(ICharacter character, float Damage)
+        public void ReceiveDamage(IActor actor, float Damage)
         {
-            if (IsAlive && this.Health <= Damage)
+            try
             {
-                this.Health = 0;
-                this.IsAlive = false;
-                Console.WriteLine($"\n --DEATH-- Character {typeName} receives damage: {Damage} from {character.GetType().Name} and he dies");
+                IMonster monster = actor as IMonster ?? throw new NullReferenceException("--ERROR-- actor cannot be null");
+
+                if (IsAlive && this.Health <= Damage)
+                {
+
+                    this.Health = 0;
+                    this.IsAlive = false;
+                    Console.WriteLine($"\n --DEATH-- Character {typeName} receives damage: {Damage} from {monster.GetType().Name} and he dies");
+                }
+                else if (IsAlive && this.Health > Damage)
+                {
+                    this.Health -= Damage;
+                    Console.WriteLine($"Character {typeName} receives damage: {Damage}");
+                }
+                else
+                {
+                    Console.WriteLine("The Character cannot receive any damage, cause he's dead");
+
+                }
             }
-            else if (IsAlive && this.Health > Damage)
+            catch (NullReferenceException ex)
             {
-                this.Health -= Damage;
-                Console.WriteLine($"Character {typeName} receives damage: {Damage}");
+
+                Console.WriteLine(ex.Message);
             }
-            else
-            {
-                Console.WriteLine("The Character cannot receive any damage, cause he's dead");
-            }
+
+
         }
 
         //ICharacter

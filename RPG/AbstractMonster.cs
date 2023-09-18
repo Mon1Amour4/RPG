@@ -14,25 +14,36 @@ namespace RPG
         public bool IsAlive { get; private set; }
         public float AttackPower { get; }
         protected abstract string typeName { get; }//Чоби не юзать рефлексию по 100 раз
-        public void ReceiveDamage(ICharacter character, float Damage)
+        public void ReceiveDamage(IActor actor, float Damage)
         {
-            if (this.IsAlive && this.Health <= Damage)
+            try
             {
-                this.Health = 0;
-                this.IsAlive = false;
+                ICharacter character = actor as ICharacter ?? throw new NullReferenceException("--ERROR-- actor cannot be null");
 
-                Console.WriteLine($"\n --DEATH -- Monster {typeName} receives damage from {character.GetType().Name} and it dies");
-                character.ReceiveExperience(this.XpReward);
+                if (this.IsAlive && this.Health <= Damage)
+                {
+                    this.Health = 0;
+                    this.IsAlive = false;
+
+                    Console.WriteLine($"\n --DEATH -- Monster {typeName} receives damage from {character.GetType().Name} and it dies");
+                    character.ReceiveExperience(this.XpReward);
+                }
+                else if (this.IsAlive && this.Health > Damage)
+                {
+                    this.Health -= Damage;
+                    Console.WriteLine($"Monster {typeName} receives {Damage} damage from {character.GetType().Name} and has {this.Health} HP");
+                }
+                else
+                {
+                    Console.WriteLine($"Character {typeName} cannot receive any damage cause he's dead");
+                }
             }
-            else if (this.IsAlive && this.Health > Damage)
+            catch (NullReferenceException ex)
             {
-                this.Health -= Damage;
-                Console.WriteLine($"Monster {typeName} receives {Damage} damage from {character.GetType().Name} and has {this.Health} HP");
+
+                Console.WriteLine(ex.Message);
             }
-            else
-            {
-                Console.WriteLine($"Character {typeName} cannot receive any damage cause he's dead");
-            }
+
         }
         public uint XpReward { get; }
         public AbstractMonster(string name, float health, float attackPower, uint expReward)
