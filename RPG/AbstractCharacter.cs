@@ -22,7 +22,7 @@ namespace RPG
         protected abstract Dictionary<uint, float> PowerTable { get; }
         protected abstract string typeName { get; }
 
-        public Action<string> DeathAnnounce = (name) => Console.WriteLine($"Character {typeof(IActor)} is dead!");
+        public Action<IActor,float> RecieveDamageAnnounce = (actor,damage) => Console.WriteLine($"Character {actor.GetType().Name} receives damage: {damage}");
         public void ReceiveDamage(IActor actor, float Damage)
         {
             try
@@ -33,13 +33,13 @@ namespace RPG
                 {
                     this.Health = 0;
                     this.IsAlive = false;
-                    DeathAnnounce.Invoke(typeName);
-                    Console.WriteLine($"\n --DEAD-- Character {typeName} receives damage: {Damage} from {monster.GetType().Name} and he's died");
+                    RecieveDamageAnnounce(this, monster.AttackPower);
+                    this.OnDie?.Invoke();
                 }
                 else if (IsAlive && this.Health > Damage)
                 {
                     this.Health -= Damage;
-                    Console.WriteLine($"Character {typeName} receives damage: {Damage}");
+                    RecieveDamageAnnounce(this, monster.AttackPower);
                 }
                 else
                 {

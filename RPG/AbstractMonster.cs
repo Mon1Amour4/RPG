@@ -10,13 +10,15 @@ namespace RPG
     internal abstract class AbstractMonster : IMonster
     {
         public string Name { get; }
-        public Action OnDie { get; set; }
+
         public float Health { get; private set; }
         public bool IsAlive { get; private set; }
         public float AttackPower { get; }
         protected abstract string typeName { get; }//Чоби не юзать рефлексию по 100 раз
 
- 
+        public Action OnDie { get; set; }
+        public Action<IActor, float> RecieveDamageAnnounce = (actor, damage) => Console.WriteLine($"Monster {actor.GetType().Name} receives damage: {damage}");
+
         public void ReceiveDamage(IActor actor, float Damage)
         {
             try
@@ -27,14 +29,14 @@ namespace RPG
                 {
                     this.Health = 0;
                     this.IsAlive = false;
-    
-                    Console.WriteLine($"\n --DEATH -- Monster {typeName} receives damage from {character.GetType().Name} and it dies");
+                    RecieveDamageAnnounce(this, this.AttackPower);
+                    this.OnDie?.Invoke();
                     character.ReceiveExperience(this.XpReward);
                 }
                 else if (this.IsAlive && this.Health > Damage)
                 {
                     this.Health -= Damage;
-                    Console.WriteLine($"Monster {typeName} receives {Damage} damage from {character.GetType().Name} and has {this.Health} HP");
+                    RecieveDamageAnnounce(this, character.AttackPower);
                 }
                 else
                 {
@@ -56,7 +58,7 @@ namespace RPG
             this.AttackPower = attackPower;
             this.IsAlive = true;
             this.XpReward = expReward;
-            this.OnDie += () => { Console.WriteLine($"{this.Name} has died"); };
+            this.OnDie += () => { Console.WriteLine($"--DEATH-- {this.Name} has died"); };
         }
 
     }

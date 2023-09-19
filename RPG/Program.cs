@@ -12,10 +12,10 @@ namespace RPG
         {
             //Subscribr
             Game GameInstance = Game.GetInstance();
-            Rogue rogue = new Rogue("Maximus", 16.0f, 25.0f);
-            Warrior warrior = new Warrior("warrior", 44, 44);
-            Wizard wizard = new Wizard("Wizardiy", 44, 34);
-            Dragon dragon = new Dragon("Blood Dragon", 15f, 14f, 900);
+            Rogue rogue = new Rogue("Maximus", 16.0f, 1.0f);
+            Warrior warrior = new Warrior("warrior", 1, 220);
+            Wizard wizard = new Wizard("Wizardiy", 3, 44);
+            Dragon dragon = new Dragon("Blood Dragon", 55f, 1f, 900);
 
             FightResult result;
             GameInstance.Fight(warrior, dragon, out result);

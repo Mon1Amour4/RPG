@@ -30,28 +30,25 @@ namespace RPG
 
 
         public void Fight(ICharacter charecter, IMonster monster, out FightResult result)
-        {
+        { 
+            int i = 1;
             result = FightResult.Default;
             IActor attackingSide = null;
             IActor defensiveSide = null;
-            for (int i = 0; i < NumRounds; i++)
+            for (; i < NumRounds+1; i++)
             {
-                result = FightResult.Lost;
+                Console.WriteLine($"\nRound {i} has started:");
+                
                 GetWhoIsFirst(charecter, monster, out attackingSide, out defensiveSide);
+
                 TryApplyDamage(attackingSide, defensiveSide, out result);
-                i++;
-                if (!charecter.IsAlive)
+                if (attackingSide.IsAlive == false || defensiveSide.IsAlive == false)
                 {
-                    charecter.OnDie?.Invoke();
-                }
-                else if (!monster.IsAlive)
-                {
-                    monster.OnDie?.Invoke();
+                    break;
                 }
             }
-            if (attackingSide.IsAlive || defensiveSide.IsAlive)
+            if (attackingSide.IsAlive || defensiveSide.IsAlive && i> NumRounds)
             {
-                Console.WriteLine("Draw");
                 result = FightResult.Draw;
                 Console.WriteLine(result);
             }
@@ -81,34 +78,45 @@ namespace RPG
         }
         public void TryApplyDamage(IActor attackingSide, IActor defensiveSide, out FightResult result)
         {
-            result = FightResult.Draw;
+            result = FightResult.Default;
 
             if (Rand(attackApplyDamageProbability))
             {
                 defensiveSide.ReceiveDamage(attackingSide, attackingSide.AttackPower);
+                Console.WriteLine($"{attackingSide.GetType().Name} is attacking successfully!");
                 if (!IsAlive(defensiveSide))
                 {
-                    Console.WriteLine($"{attackingSide.GetType().Name} is Win!");
+                    defensiveSide.OnDie?.Invoke();
+                    Console.WriteLine($"{attackingSide.GetType().Name} won by attacking first!");
                     result = FightResult.Won;
                     Console.WriteLine(result);
                     return;
                 }
                 if (Rand(attackApplyDamageProbability))
                 {
+                    Console.WriteLine($"--REVERSE--");
                     attackingSide.ReceiveDamage(defensiveSide, defensiveSide.AttackPower);
                     if (!IsAlive(attackingSide))
                     {
-                        Console.WriteLine($"{defensiveSide.GetType().Name} is Win!");
+                        attackingSide.OnDie?.Invoke();
+                        Console.WriteLine($"{defensiveSide.GetType().Name} won by attacking second!");
                         result = FightResult.Lost;
                         Console.WriteLine(result);
                         return;
                     }
                 }
+                else
+                {
+                    Console.WriteLine($"{defensiveSide.GetType().Name} misses!\n");
+                }
             }
             else
             {
+                Console.WriteLine($"{attackingSide.GetType().Name} misses!\n --REVERSE--");
+
                 if (Rand(attackApplyDamageProbability))
                 {
+                    Console.WriteLine($"{defensiveSide.GetType().Name} is attacking successfully!");
                     attackingSide.ReceiveDamage(defensiveSide, defensiveSide.AttackPower);
                     if (!IsAlive(attackingSide))
                     {
