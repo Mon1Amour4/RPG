@@ -12,6 +12,7 @@ namespace RPG
 
     internal abstract class AbstractCharacter : ICharacter
     {
+        public Action OnDie { get; set; }
         //IActor
         public string Name { get; }
         public float Health { get; protected set; }
@@ -20,6 +21,8 @@ namespace RPG
         protected abstract Dictionary<uint, float> HealthTable { get; }
         protected abstract Dictionary<uint, float> PowerTable { get; }
         protected abstract string typeName { get; }
+
+        public Action<string> DeathAnnounce = (name) => Console.WriteLine($"Character {typeof(IActor)} is dead!");
         public void ReceiveDamage(IActor actor, float Damage)
         {
             try
@@ -28,10 +31,10 @@ namespace RPG
 
                 if (IsAlive && this.Health <= Damage)
                 {
-
                     this.Health = 0;
                     this.IsAlive = false;
-                    Console.WriteLine($"\n --DEATH-- Character {typeName} receives damage: {Damage} from {monster.GetType().Name} and he dies");
+                    DeathAnnounce.Invoke(typeName);
+                    Console.WriteLine($"\n --DEAD-- Character {typeName} receives damage: {Damage} from {monster.GetType().Name} and he's died");
                 }
                 else if (IsAlive && this.Health > Damage)
                 {
@@ -49,9 +52,9 @@ namespace RPG
 
                 Console.WriteLine(ex.Message);
             }
-
-
         }
+
+
 
         //ICharacter
         public uint Experience { get; private set; }
@@ -192,7 +195,7 @@ namespace RPG
             this.AttackPower = baseAttackPower;
             this.Experience = 0;
             this.Level = 0;
-
+            this.OnDie += () => { Console.WriteLine($"{this.Name} has died"); };
         }
 
     }

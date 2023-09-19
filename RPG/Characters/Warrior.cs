@@ -23,6 +23,7 @@ namespace RPG.Characters
         }
         public Warrior(string Name, float baseAttackPower, float baseHealth) : base(Name, baseAttackPower, baseHealth)
         {
+
         }
     }
 }

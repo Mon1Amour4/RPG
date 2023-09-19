@@ -8,6 +8,8 @@ namespace RPG
         uint Experience { get; }
         uint Level { get; }
 
+        
+
         void ReceiveExperience(uint Experience);
     }
 }

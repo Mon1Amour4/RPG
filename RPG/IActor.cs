@@ -8,7 +8,7 @@ namespace RPG
         float Health { get; } // Changed to float from uint
         bool IsAlive { get; }
         float AttackPower { get; } // Changed to float from uint
-
+        public Action OnDie { get; set; }
         void ReceiveDamage(IActor actor, float Damage); // Changed to float from uint
     }
 }
