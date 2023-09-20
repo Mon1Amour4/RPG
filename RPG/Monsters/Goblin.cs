@@ -12,7 +12,8 @@ namespace RPG.Monsters
         protected override string typeName => goblinTypeName;
         public Goblin(string name, float health, float attackPower, uint xpReward) : base(name, health, attackPower, xpReward)
         {
-
+            this.AttackProbability = 0.65f;
+            this.ApplyDamageProbability = 0.35f;
         }
     }
 }

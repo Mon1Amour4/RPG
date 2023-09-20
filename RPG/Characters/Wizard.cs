@@ -19,6 +19,8 @@ namespace RPG.Characters
         }
         public Wizard(string Name, float baseAttackPower, float baseHealth) : base(Name, baseAttackPower, baseHealth)
         {
+            this.AttackProbability = 0.5f;
+            this.ApplyDamageProbability = 0.6f;
         }
     }
 }

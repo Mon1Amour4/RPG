@@ -14,6 +14,8 @@ namespace RPG
         public float Health { get; private set; }
         public bool IsAlive { get; private set; }
         public float AttackPower { get; }
+        public float AttackProbability { get; protected set; }
+        public float ApplyDamageProbability { get; protected set; }
         protected abstract string typeName { get; }//Чоби не юзать рефлексию по 100 раз
 
         public Action OnDie { get; set; }
@@ -56,6 +58,8 @@ namespace RPG
             this.Name = name;
             this.Health = health;
             this.AttackPower = attackPower;
+            this.AttackProbability = 0;
+            this.ApplyDamageProbability = 0;
             this.IsAlive = true;
             this.XpReward = expReward;
             this.OnDie += () => { Console.WriteLine($"--DEATH-- {this.Name} has died"); };

@@ -26,7 +26,8 @@ namespace RPG.Characters
         public Rogue(string name, float baseHealth, float baseAttackPower)
                 : base(name, baseHealth, baseAttackPower)
         {
-            // IMPLEMENACION
+            this.AttackProbability = 0.6f;
+            this.ApplyDamageProbability = 0.7f;
 
         }
 

@@ -13,7 +13,8 @@ namespace RPG.Monsters
 
         public Ork(string name, float health, float attackPower, uint xpReward) : base(name, health, attackPower, xpReward)
         {
-
+            this.AttackProbability = 0.45f;
+            this.ApplyDamageProbability = 0.45f;
         }
     }
 }

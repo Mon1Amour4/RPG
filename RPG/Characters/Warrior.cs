@@ -23,7 +23,8 @@ namespace RPG.Characters
         }
         public Warrior(string Name, float baseAttackPower, float baseHealth) : base(Name, baseAttackPower, baseHealth)
         {
-
+            this.AttackProbability = 0.4f;
+            this.ApplyDamageProbability = 0.55f;
         }
     }
 }

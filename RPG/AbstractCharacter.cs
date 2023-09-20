@@ -18,6 +18,9 @@ namespace RPG
         public float Health { get; protected set; }
         public bool IsAlive { get; private set; }
         public float AttackPower { get; protected set; }
+        public float AttackProbability { get; protected set; }
+        public float ApplyDamageProbability { get; protected set; }
+        
         protected abstract Dictionary<uint, float> HealthTable { get; }
         protected abstract Dictionary<uint, float> PowerTable { get; }
         protected abstract string typeName { get; }
@@ -86,7 +89,7 @@ namespace RPG
         public void increaseStats()
         {
             float tempAttckPWR = this.AttackPower;
-            float tempHEalth = this.Health;
+            float tempHealth = this.Health;
             float temp;
 
             if (IncreaseStat(PowerTable, out temp))
@@ -98,9 +101,9 @@ namespace RPG
             {
                 this.Health = temp;
             }
-            float resAtck = this.AttackPower - tempAttckPWR;
-            float resHJealth = this.Health - tempHEalth;
-            Console.WriteLine($"Character had increased he's stats:\nAttack Power: {tempAttckPWR} (+{this.AttackPower - tempAttckPWR}) --> {this.AttackPower}\nHealth: {tempHEalth} (+{this.Health - tempHEalth}) --> {this.Health}");
+            float resAttackPower = this.AttackPower - tempAttckPWR;
+            float resHealth = this.Health - tempHealth;
+            Console.WriteLine($"Character had increased he's stats:\nAttack Power: {tempAttckPWR} (+{this.AttackPower - tempAttckPWR}) --> {this.AttackPower}\nHealth: {tempHealth} (+{this.Health - tempHealth}) --> {this.Health}");
         }
 
         virtual public void levelUp()
@@ -200,6 +203,8 @@ namespace RPG
             this.AttackPower = baseAttackPower;
             this.Experience = 0;
             this.Level = 0;
+            this.AttackProbability = 0;
+            this.ApplyDamageProbability = 0;
             this.OnDie += () => { Console.WriteLine($"{this.Name} has died"); };
 
         }

@@ -12,7 +12,8 @@ namespace RPG.Monsters
         protected override string typeName => dragonTypeName;
         public Dragon(string name, float health, float attackPower, uint xpReward) : base(name, health, attackPower, xpReward)
         {
-
+            this.AttackProbability = 0.8f;
+            this.ApplyDamageProbability = 0.75f;
         }
 
 
