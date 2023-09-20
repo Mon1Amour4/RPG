@@ -20,48 +20,53 @@ namespace RPG
 
     internal class Game
     {
-
         private readonly float attackProbability = 0.5f;
         private readonly float attackApplyDamageProbability = 0.75f;
-
         public const uint NumRounds = 10;
-        private static Game instance = null;
-
-
+        private static Game? instance = null;
 
         public void Fight(ICharacter charecter, IMonster monster, out FightResult result)
-        { 
+        {
             int i = 1;
             result = FightResult.Default;
-            IActor attackingSide = null;
-            IActor defensiveSide = null;
-            for (; i < NumRounds+1; i++)
+            IActor? attackingSide = null;
+            IActor? defensiveSide = null;
+
+            for (; i < NumRounds + 1; i++)
             {
                 Console.WriteLine($"\nRound {i} has started:");
-                
+
                 GetWhoIsFirst(charecter, monster, out attackingSide, out defensiveSide);
 
-                TryApplyDamage(attackingSide, defensiveSide, out result);
-                if (attackingSide.IsAlive == false || defensiveSide.IsAlive == false)
+
+                if (attackingSide != null && defensiveSide != null)
                 {
-                    break;
+
+
+                    TryApplyDamage(attackingSide, defensiveSide, out result);
+
+                    if (attackingSide.IsAlive == false || defensiveSide.IsAlive == false)
+                    {
+                        break;
+                    }
+
+
+                    if (attackingSide.IsAlive || defensiveSide.IsAlive && i > NumRounds)
+                    {
+                        result = FightResult.Draw;
+                        Console.WriteLine(result);
+                    }
                 }
             }
-            if (attackingSide.IsAlive || defensiveSide.IsAlive && i> NumRounds)
-            {
-                result = FightResult.Draw;
-                Console.WriteLine(result);
-            }
-
         }
-        public void GetWhoIsFirst(ICharacter charecter, IMonster monster, out IActor attackingSide, out IActor defensiveSide)
+        public void GetWhoIsFirst(ICharacter charecter, IMonster monster, out IActor? attackingSide, out IActor? defensiveSide)
         {
             defensiveSide = null;
             attackingSide = null;
 
             if (monster != null && charecter != null)
             {
-                if (Rand(attackProbability))
+                if (Randomize(attackProbability))
                 {
                     Console.WriteLine($"{charecter.GetType().Name} is first");
                     defensiveSide = monster;
@@ -74,13 +79,16 @@ namespace RPG
                     attackingSide = monster;
                 }
             }
-
+            else
+            {
+                Console.WriteLine("--ERROR--  monster or character == null");
+            }
         }
         public void TryApplyDamage(IActor attackingSide, IActor defensiveSide, out FightResult result)
         {
             result = FightResult.Default;
 
-            if (Rand(attackApplyDamageProbability))
+            if (Randomize(attackApplyDamageProbability))
             {
                 defensiveSide.ReceiveDamage(attackingSide, attackingSide.AttackPower);
                 Console.WriteLine($"{attackingSide.GetType().Name} is attacking successfully!");
@@ -92,7 +100,7 @@ namespace RPG
                     Console.WriteLine(result);
                     return;
                 }
-                if (Rand(attackApplyDamageProbability))
+                if (Randomize(attackApplyDamageProbability))
                 {
                     Console.WriteLine($"--REVERSE--");
                     attackingSide.ReceiveDamage(defensiveSide, defensiveSide.AttackPower);
@@ -114,7 +122,7 @@ namespace RPG
             {
                 Console.WriteLine($"{attackingSide.GetType().Name} misses!\n --REVERSE--");
 
-                if (Rand(attackApplyDamageProbability))
+                if (Randomize(attackApplyDamageProbability))
                 {
                     Console.WriteLine($"{defensiveSide.GetType().Name} is attacking successfully!");
                     attackingSide.ReceiveDamage(defensiveSide, defensiveSide.AttackPower);
@@ -126,12 +134,10 @@ namespace RPG
                         return;
                     }
                 }
-
-
             }
         }
 
-        private bool Rand(float probability)
+        private bool Randomize(float probability)
         {
             Random rnd = new Random();
             double koef = rnd.NextDouble();

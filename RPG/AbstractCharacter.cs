@@ -12,7 +12,7 @@ namespace RPG
 
     internal abstract class AbstractCharacter : ICharacter
     {
-        public Action OnDie { get; set; }
+
         //IActor
         public string Name { get; }
         public float Health { get; protected set; }
@@ -22,7 +22,8 @@ namespace RPG
         protected abstract Dictionary<uint, float> PowerTable { get; }
         protected abstract string typeName { get; }
 
-        public Action<IActor,float> RecieveDamageAnnounce = (actor,damage) => Console.WriteLine($"Character {actor.GetType().Name} receives damage: {damage}");
+        public Action OnDie { get; set; }
+        public Action<IActor, float> RecieveDamageAnnounce = (actor, damage) => Console.WriteLine($"Character {actor.GetType().Name} receives damage: {damage}");
         public void ReceiveDamage(IActor actor, float Damage)
         {
             try
@@ -97,8 +98,11 @@ namespace RPG
             {
                 this.Health = temp;
             }
+            float resAtck = this.AttackPower - tempAttckPWR;
+            float resHJealth = this.Health - tempHEalth;
             Console.WriteLine($"Character had increased he's stats:\nAttack Power: {tempAttckPWR} (+{this.AttackPower - tempAttckPWR}) --> {this.AttackPower}\nHealth: {tempHEalth} (+{this.Health - tempHEalth}) --> {this.Health}");
         }
+
         virtual public void levelUp()
         {
             uint tempExp = 0;
@@ -187,6 +191,7 @@ namespace RPG
             { 4, 90 },
             { 5, 140 }
         };
+
         public AbstractCharacter(string Name, float baseAttackPower, float baseHealth)
         {
             this.Name = Name;
@@ -196,7 +201,9 @@ namespace RPG
             this.Experience = 0;
             this.Level = 0;
             this.OnDie += () => { Console.WriteLine($"{this.Name} has died"); };
+
         }
+
 
     }
 }

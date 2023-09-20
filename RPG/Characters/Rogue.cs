@@ -18,7 +18,7 @@ namespace RPG.Characters
 
         protected override Dictionary<uint, float> PowerTable => rogueAttackPowerTable;
         protected override Dictionary<uint, float> HealthTable => rogueHealthTable;
-
+        
         static Rogue()
         {
             Deserialization(ref rogueAttackPowerTable, ref rogueHealthTable, rogueTypeName);
