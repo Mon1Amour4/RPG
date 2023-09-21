@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RPG
+﻿namespace RPG
 {
     [Serializable]
     internal abstract class AbstractMonster : IMonster
@@ -18,8 +12,8 @@ namespace RPG
         public float ApplyDamageProbability { get; protected set; }
         protected abstract string typeName { get; }//Чоби не юзать рефлексию по 100 раз
 
-        public Action OnDie { get; set; }
-        public Action<IActor, float> RecieveDamageAnnounce = (actor, damage) => Console.WriteLine($"Monster {actor.GetType().Name} receives damage: {damage}");
+        public event Action<IActor, IActor> DeathAnnounce;
+        public event Action<IActor, IActor> ReceiveDamageAnnounce;
 
         public void ReceiveDamage(IActor actor, float Damage)
         {
@@ -31,14 +25,13 @@ namespace RPG
                 {
                     this.Health = 0;
                     this.IsAlive = false;
-                    RecieveDamageAnnounce(this, this.AttackPower);
-                    this.OnDie?.Invoke();
+                    DeathAnnounce?.Invoke(actor, this);
                     character.ReceiveExperience(this.XpReward);
                 }
                 else if (this.IsAlive && this.Health > Damage)
                 {
+                    ReceiveDamageAnnounce?.Invoke(actor, this);
                     this.Health -= Damage;
-                    RecieveDamageAnnounce(this, character.AttackPower);
                 }
                 else
                 {
@@ -62,7 +55,8 @@ namespace RPG
             this.ApplyDamageProbability = 0;
             this.IsAlive = true;
             this.XpReward = expReward;
-            this.OnDie += () => { Console.WriteLine($"--DEATH-- {this.Name} has died"); };
+            this.DeathAnnounce += GameEvents.DeathAnnouncer;
+            this.ReceiveDamageAnnounce += GameEvents.ReceiveDamageAnnouncer;
         }
 
     }

@@ -14,16 +14,15 @@ namespace RPG
     {
         Won,
         Lost,
-        Draw,
-        Default
+        Draw
     }
     internal class Game
     {
         public const uint NumRounds = 10;
         private static Game? instance = null;
-        public void Fight(ICharacter charecter, IMonster monster, out FightResult result)
+        public FightResult Fight(ICharacter charecter, IMonster monster)
         {
-            result = FightResult.Default;
+            var result = FightResult.Draw;
             for (int i = 1; i < NumRounds + 1; i++)
             {
                 Console.WriteLine($"\nRound {i} has started:");
@@ -32,19 +31,18 @@ namespace RPG
                 if (!charecter.IsAlive)
                 {
                     result = FightResult.Lost;
-                    break;
+                    return FightResult.Lost;
                 }
                 if (!monster.IsAlive)
                 {
                     result = FightResult.Won;
-                    break;
+                    return FightResult.Won;
+
                 }
             }
-            if (charecter.IsAlive && monster.IsAlive)
-            {
-                result = FightResult.Draw;
-            }
+
             Console.WriteLine($"--RESULT-- of the fight is: {result}");
+            return result;
         }
         public IActor GetWhoIsFirst(ICharacter character, IMonster monster)
         {
@@ -55,14 +53,9 @@ namespace RPG
                 characterTemp = Randomize(character, character.AttackProbability);
                 monsterTemp = Randomize(monster, monster.AttackProbability);
             } while (characterTemp != monsterTemp);
-            if (characterTemp == true)
-            {
-                return character;
-            }
-            else
-            {
-                return monster;
-            }
+
+            return characterTemp ? character : monster;
+
         }
         public void TryApplyDamage(IActor actor1, IActor actor2)
         {
@@ -71,8 +64,10 @@ namespace RPG
             {
                 Console.WriteLine($"{actor1.Name} attacks successfully");
                 actor2.ReceiveDamage(actor1, actor1.AttackPower);
-                if (!actor2.IsAlive) { return; }
-
+                if (!actor2.IsAlive)
+                {
+                    return;
+                }
             }
             else
             { Console.WriteLine($"{actor1.Name} misses!"); }
@@ -82,7 +77,10 @@ namespace RPG
             {
                 Console.WriteLine($"{actor2.Name} attacks successfully");
                 actor1.ReceiveDamage(actor2, actor2.AttackPower);
-                if (!actor1.IsAlive) { return; }
+                if (!actor1.IsAlive)
+                {
+                    return;
+                }
             }
             else { Console.WriteLine($"{actor2.Name} misses"); }
         }

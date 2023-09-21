@@ -10,7 +10,6 @@ namespace RPG
         float AttackPower { get; } // Changed to float from uint
         float AttackProbability { get; }
         float ApplyDamageProbability { get; }
-        public Action OnDie { get; set; }
         void ReceiveDamage(IActor actor, float Damage); // Changed to float from uint
     }
 }

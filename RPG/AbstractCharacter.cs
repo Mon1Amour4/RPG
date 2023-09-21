@@ -20,30 +20,30 @@ namespace RPG
         public float AttackPower { get; protected set; }
         public float AttackProbability { get; protected set; }
         public float ApplyDamageProbability { get; protected set; }
-        
         protected abstract Dictionary<uint, float> HealthTable { get; }
         protected abstract Dictionary<uint, float> PowerTable { get; }
-        protected abstract string typeName { get; }
+        //EVENTS
 
-        public Action OnDie { get; set; }
-        public Action<IActor, float> RecieveDamageAnnounce = (actor, damage) => Console.WriteLine($"Character {actor.GetType().Name} receives damage: {damage}");
+        public event Action<IActor, IActor> DeathAnnounce;
+        public event Action<IActor, IActor> ReceiveDamageAnnounce;
+        public event Action<ICharacter> LevelUpAnnounce;
+        protected abstract string typeName { get; }
         public void ReceiveDamage(IActor actor, float Damage)
         {
             try
             {
                 IMonster monster = actor as IMonster ?? throw new NullReferenceException("--ERROR-- actor cannot be null");
-
                 if (IsAlive && this.Health <= Damage)
                 {
                     this.Health = 0;
                     this.IsAlive = false;
-                    RecieveDamageAnnounce(this, monster.AttackPower);
-                    this.OnDie?.Invoke();
+                    DeathAnnounce?.Invoke(actor, this);
+                    ReceiveDamageAnnounce?.Invoke(actor, this);
                 }
                 else if (IsAlive && this.Health > Damage)
                 {
+                    ReceiveDamageAnnounce?.Invoke(actor, this);
                     this.Health -= Damage;
-                    RecieveDamageAnnounce(this, monster.AttackPower);
                 }
                 else
                 {
@@ -117,7 +117,7 @@ namespace RPG
                 {
                     this.Level++;
                     this.Experience -= tempExp;
-                    Console.WriteLine($"\n --LVLUP-- Character {typeName} Had leveled up and now he has {this.Level} Level");
+                    LevelUpAnnounce.Invoke(this);
                     this.increaseStats();
                 }
                 else
@@ -205,7 +205,9 @@ namespace RPG
             this.Level = 0;
             this.AttackProbability = 0;
             this.ApplyDamageProbability = 0;
-            this.OnDie += () => { Console.WriteLine($"{this.Name} has died"); };
+            this.DeathAnnounce += GameEvents.DeathAnnouncer;
+            this.ReceiveDamageAnnounce += GameEvents.ReceiveDamageAnnouncer;
+            this.LevelUpAnnounce += GameEvents.LevelUpAnnouncer;
 
         }
 
