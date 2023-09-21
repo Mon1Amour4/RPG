@@ -19,8 +19,6 @@ namespace RPG
     }
     internal class Game
     {
-        private readonly float attackProbability = 0.5f;
-        private readonly float attackApplyDamageProbability = 0.75f;
         public const uint NumRounds = 10;
         private static Game? instance = null;
         public void Fight(ICharacter charecter, IMonster monster, out FightResult result)
@@ -31,16 +29,22 @@ namespace RPG
                 Console.WriteLine($"\nRound {i} has started:");
                 GetWhoIsFirst(charecter, monster);
                 TryApplyDamage(charecter, monster);
-                if (!charecter.IsAlive || !monster.IsAlive)
+                if (!charecter.IsAlive)
                 {
+                    result = FightResult.Lost;
+                    break;
+                }
+                if (!monster.IsAlive)
+                {
+                    result = FightResult.Won;
                     break;
                 }
             }
             if (charecter.IsAlive && monster.IsAlive)
             {
                 result = FightResult.Draw;
-                Console.WriteLine(result);
             }
+            Console.WriteLine($"--RESULT-- of the fight is: {result}");
         }
         public IActor GetWhoIsFirst(ICharacter character, IMonster monster)
         {
@@ -60,78 +64,27 @@ namespace RPG
                 return monster;
             }
         }
-        public void TryApplyDamage(ICharacter character, IMonster monster)
+        public void TryApplyDamage(IActor actor1, IActor actor2)
         {
-            IActor tempActor = GetWhoIsFirst(character, monster);
-            if (tempActor is ICharacter && character.IsAlive == true)
+            Console.WriteLine($"{actor1.Name} is first");
+            if (Randomize(actor1, actor1.ApplyDamageProbability))
             {
-                Console.WriteLine($"{tempActor.Name} is first!");
-                if (Randomize(character, character.ApplyDamageProbability))
-                {
-                    Console.WriteLine($"{character.Name} attacks successfully");
-                    monster.ReceiveDamage(character, character.AttackPower);
-                    if (!monster.IsAlive) { return; } 
-                    Console.WriteLine("--REVERSE--");
-                    if (Randomize(monster, monster.ApplyDamageProbability))
-                    {
-                        Console.WriteLine($"{monster.Name} attacks successfully");
-                        character.ReceiveDamage(monster, monster.ApplyDamageProbability);
-                        if (!character.IsAlive) { return; }
-                    }
-                    else
-                    {
-                        Console.WriteLine($"{monster.Name} misses!");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"{character.Name} misses!");
-                    if (Randomize(monster, monster.ApplyDamageProbability))
-                    {
-                        Console.WriteLine($"{monster.Name} attacks successfully");
-                        character.ReceiveDamage(monster, monster.ApplyDamageProbability);
-                        if (!character.IsAlive) { return; }
-                    }
-                    else
-                    {
-                        Console.WriteLine($"{monster.Name} misses!");
-                    }
-                }
+                Console.WriteLine($"{actor1.Name} attacks successfully");
+                actor2.ReceiveDamage(actor1, actor1.AttackPower);
+                if (!actor2.IsAlive) { return; }
+
             }
             else
+            { Console.WriteLine($"{actor1.Name} misses!"); }
+
+            Console.WriteLine("--REVERSE--");
+            if (Randomize(actor2, actor2.ApplyDamageProbability))
             {
-                Console.WriteLine($"{tempActor.Name} is first!");
-                if (Randomize(monster, monster.ApplyDamageProbability))
-                {
-                    Console.WriteLine($"{monster.Name} attacks successfully");
-                    character.ReceiveDamage(monster, monster.AttackPower);
-                    Console.WriteLine("--REVERSE--");
-                    if (Randomize(character, character.ApplyDamageProbability))
-                    {
-                        Console.WriteLine($"{character.Name} attacks successfully");
-                        monster.ReceiveDamage(character, character.ApplyDamageProbability);
-                        if (!monster.IsAlive) { return; }
-                    }
-                    else
-                    {
-                        Console.WriteLine($"{character.Name} misses!");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"{monster.Name} misses!");
-                    if (Randomize(character, character.ApplyDamageProbability))
-                    {
-                        Console.WriteLine($"{character.Name} attacks successfully");
-                        monster.ReceiveDamage(character, character.ApplyDamageProbability);
-                        if (!monster.IsAlive) { return; }
-                    }
-                    else
-                    {
-                        Console.WriteLine($"{character.Name} misses!");
-                    }
-                }
+                Console.WriteLine($"{actor2.Name} attacks successfully");
+                actor1.ReceiveDamage(actor2, actor2.AttackPower);
+                if (!actor1.IsAlive) { return; }
             }
+            else { Console.WriteLine($"{actor2.Name} misses"); }
         }
         private bool Randomize(IActor actor, float probability)
         {
