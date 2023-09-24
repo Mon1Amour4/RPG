@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace RPG
 {
 
@@ -24,6 +25,7 @@ namespace RPG
         {
             Console.WriteLine($"--LVL UP-- Character {character.Name} has Leveled up and now he's {character.Level} LVL\n");
         }
+       
 
     }
 }

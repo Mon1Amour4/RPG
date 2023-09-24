@@ -1,4 +1,5 @@
-﻿namespace RPG
+﻿
+namespace RPG
 {
     [Serializable]
     internal abstract class AbstractMonster : IMonster
